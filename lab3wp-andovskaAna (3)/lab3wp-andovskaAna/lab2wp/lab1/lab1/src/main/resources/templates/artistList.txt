@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Add New Performer to Song</title>
+    <style>
+        body {
+            width: 800px;
+            margin: auto;
+        }
+        table {
+            width: 100%;
+        }
+        table, td, th {
+            border: 1px solid black;
+            padding: 3px 2px;
+        }
+        header, section, aside {
+            margin-bottom: 20px;
+        }
+        .buttons {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Select the Artist to Add to the List of Performers</h1>
+</header>
+<section>
+    <h2>Select an Artist:</h2>
+    <form action="/artist" method="post">
+        <!-- Loop through available artists -->
+        <div th:each="artist : ${artists}">
+            <input type="radio" name="artistId" th:value="${artist.id}" />
+            <span th:text="${artist.firstName + ' ' + artist.lastName}"></span> <br/>
+        </div>
+        <!-- Hidden field for trackId -->
+<!--        <input type="hidden" name="trackId" th:value="${trackId}" />-->
+        <input type="hidden" name="id" th:value="${id}">
+        <div class="buttons">
+            <input type="submit" value="Add Artist">
+            <a href="/songs" style="margin-left: 10px;">Back to Songs</a>
+        </div>
+    </form>
+</section>
+<aside>
+    <h2>Track Details</h2>
+    <table>
+        <tr>
+            <td><b>Track ID:</b></td>
+            <td th:text="${id}"></td>
+        </tr>
+    </table>
+</aside>
+<footer>
+    <p>&copy; 2024 My Music Store</p>
+</footer>
+</body>
+</html>

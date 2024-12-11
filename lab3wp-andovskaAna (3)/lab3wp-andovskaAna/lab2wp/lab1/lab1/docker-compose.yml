@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres_music_db
+    restart: always
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: music
+    ports:
+      - "5432:5432"
+    volumes:
+      - "C:/Users/andov/Downloads/lab3wp-andovskaAna/lab2wp/lab1/lab1/data:/var/lib/postgresql/data"
+
+
+volumes:
+  postgres_data:

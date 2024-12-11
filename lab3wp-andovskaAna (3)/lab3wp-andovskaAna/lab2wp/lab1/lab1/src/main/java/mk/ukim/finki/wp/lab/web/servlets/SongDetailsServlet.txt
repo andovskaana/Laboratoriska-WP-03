@@ -1,0 +1,48 @@
+package mk.ukim.finki.wp.lab.web;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import mk.ukim.finki.wp.lab.model.Song;
+import mk.ukim.finki.wp.lab.service.SongService;
+import org.thymeleaf.context.WebContext;
+import org.thymeleaf.spring6.SpringTemplateEngine;
+import org.thymeleaf.web.IWebExchange;
+import org.thymeleaf.web.servlet.JakartaServletWebApplication;
+
+import java.io.IOException;
+
+@WebServlet(name = "song-details-servlet", urlPatterns = "/songDetails")
+public class SongDetailsServlet extends HttpServlet {
+
+    private final SpringTemplateEngine springTemplateEngine;
+    private final SongService songService;
+
+    public SongDetailsServlet(SpringTemplateEngine springTemplateEngine, SongService songService) {
+        this.springTemplateEngine = springTemplateEngine;
+        this.songService = songService;
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // Retrieve the trackId from request parameters
+        String trackId = req.getParameter("trackId");
+
+        // Fetch the song details from SongService
+        Song song = songService.findByTrackId(trackId);
+
+        // Initialize WebContext for Thymeleaf
+        IWebExchange webExchange = JakartaServletWebApplication
+                .buildApplication(getServletContext())
+                .buildExchange(req, resp);
+        WebContext context = new WebContext(webExchange);
+
+        // Set the song details in the context
+        context.setVariable("song", song);
+
+        // Render the Thymeleaf template for song details
+        springTemplateEngine.process("songDetails.html", context, resp.getWriter());
+    }
+}

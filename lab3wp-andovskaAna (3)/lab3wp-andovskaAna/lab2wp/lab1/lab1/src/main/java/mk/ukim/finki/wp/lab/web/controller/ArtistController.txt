@@ -1,0 +1,58 @@
+package mk.ukim.finki.wp.lab.web.controller;
+
+import mk.ukim.finki.wp.lab.model.Artist;
+import mk.ukim.finki.wp.lab.model.Song;
+import mk.ukim.finki.wp.lab.service.ArtistService;
+import mk.ukim.finki.wp.lab.service.SongService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+//@Controller
+@RequestMapping("/artist")
+public class ArtistController {
+
+    private final ArtistService artistService;
+    private final SongService songService;
+
+    public ArtistController(ArtistService artistService, SongService songService) {
+        this.artistService = artistService;
+        this.songService = songService;
+    }
+
+    // Display list of artists for a selected song
+    @GetMapping
+    public String getArtistPage(@RequestParam("id") Long id, Model model) {
+        // Fetch the song by ID
+        Song song = songService.findById(id);
+
+        if (song == null) {
+            // If no song is found, redirect with an error
+            return "redirect:/songs?error=SongNotFound";
+        }
+
+        // Add the song and artist details to the model
+        model.addAttribute("song", song);
+        model.addAttribute("id", id);
+        model.addAttribute("artists", artistService.listArtists());
+
+        return "artistList"; // Thymeleaf template for artist selection
+    }
+
+    // Add an artist to a selected song
+    @PostMapping
+    public String addArtistToSong(@RequestParam("artistId") Long artistId,
+                                  @RequestParam("id") Long id) {
+        Artist artist = artistService.findById(artistId);
+        Song song = songService.findById(id);
+
+        if (artist != null && song != null) {
+            songService.addArtistToSong(artist, song);
+        }
+
+        // Redirect to the song details page after adding the artist
+        return "redirect:/songDetails?id=" + id;
+    }
+}

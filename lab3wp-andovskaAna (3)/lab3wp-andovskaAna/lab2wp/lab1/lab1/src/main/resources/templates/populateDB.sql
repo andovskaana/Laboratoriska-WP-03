@@ -1,0 +1,2 @@
+insert into album (genre, name, release_year) values ('heavy metal', 'master of puppets', '1986'), ('rock', 'rattle and hum', '1988')
+insert into song (genre, release_year, title, track_id, album_id) values ('rock', '1989', 'one', '1', '2')

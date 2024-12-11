@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Songs Homepage - My Music Store</title>
+    <style type="text/css">
+        body {
+            width: 800px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Welcome to My Music Store</h1>
+</header>
+<main>
+    <h2>Manage Songs:</h2>
+    <table border="1">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Genre</th>
+            <th>Release Year</th>
+            <th>Album</th> <!-- New column for Album -->
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="song : ${songs}">
+            <td th:text="${song.title}"></td>
+            <td th:text="${song.genre}"></td>
+            <td th:text="${song.releaseYear}"></td>
+            <td th:text="${song.album?.name}">No Album</td> <!-- Album name or fallback -->
+            <td>
+                <a th:href="@{/songs/edit/{id}(id=${song.id})}">Edit</a> |
+                <a th:href="@{/songs/delete/{id}(id=${song.id})}" onclick="return confirm('Are you sure?')">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <br>
+    <a href="/songs/add-form">Add New Song</a>
+</main>
+</body>
+</html>

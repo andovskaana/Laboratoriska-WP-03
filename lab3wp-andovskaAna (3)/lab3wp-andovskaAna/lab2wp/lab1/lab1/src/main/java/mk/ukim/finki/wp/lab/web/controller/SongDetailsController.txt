@@ -1,0 +1,36 @@
+package mk.ukim.finki.wp.lab.web.controller;
+
+import mk.ukim.finki.wp.lab.model.Song;
+import mk.ukim.finki.wp.lab.service.SongService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+//@Controller
+@RequestMapping("/songDetails")
+public class SongDetailsController {
+
+    private final SongService songService;
+
+    public SongDetailsController(SongService songService) {
+        this.songService = songService;
+    }
+
+    @GetMapping
+    public String getSongDetails(@RequestParam("id") Long id, Model model) {
+        // Fetch the song by its ID
+        Song song = songService.findById(id);
+
+        // Handle case where the song is not found
+        if (song == null) {
+            return "redirect:/songs?error=SongNotFound";
+        }
+
+        // Add the song to the model for the Thymeleaf template
+        model.addAttribute("song", song);
+
+        return "songDetails"; // Points to your existing songDetails.html
+    }
+}
